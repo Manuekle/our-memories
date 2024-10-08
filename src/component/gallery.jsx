@@ -18,16 +18,23 @@ function gallery() {
     fetchResults();
   }, []);
   return (
-    <div className="gallery">
+    <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 gap-8 items-center">
       {photos.map((photo) => (
-        <div className="image-container tall" key={photo.id}>
-          <img
-            alt={photo.description}
-            className="transform transition-transform duration-300 hover:scale-105"
-            src={photo.url}
-          />
-        </div>
+        <article key={photo.id} className="flex flex-col gap-8">
+          <div className="">
+            <img
+              alt={photo.description}
+              className="rounded-lg transform transition-transform duration-300 hover:scale-110"
+              src={photo.url}
+            />
+          </div>
+          <span className="text-white text-xs">{photo.date}</span>
+          <span className="text-white text-xs">{photo.description}</span>
+        </article>
       ))}
+      <span className="text-white text-center">
+        over time we will be uploading our memories ...
+      </span>
     </div>
   );
 }

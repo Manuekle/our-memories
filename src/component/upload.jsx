@@ -1,15 +1,52 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-use-before-define */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import {
+  add,
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  getDay,
+  isEqual,
+  isSameMonth,
+  isToday,
+  parse,
+  startOfToday
+} from 'date-fns';
 import React, { useState } from 'react';
 import { PutObjectCommand } from '@aws-sdk/client-s3'; // Importar el comando necesario
 import { bucket } from '../supabase/bucket'; // Importamos el cliente S3 configurado
 import { client } from '../supabase/client';
 import Loader from './loader';
+import Example from './calendar';
 
 function upload() {
   const [image, setImage] = useState(null);
   const [description, setDescription] = useState('');
   const [uploading, setUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
+
+  const colStartClasses = [
+    '',
+    'col-start-2',
+    'col-start-3',
+    'col-start-4',
+    'col-start-5',
+    'col-start-6',
+    'col-start-7'
+  ];
+  const today = startOfToday();
+  const [selectedDay, setSelectedDay] = useState(today);
+  const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
+  const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ');
+  }
+  const days = eachDayOfInterval({
+    start: firstDayCurrentMonth,
+    end: endOfMonth(firstDayCurrentMonth)
+  });
 
   const handleFileChange = (e) => {
     setImage(e.target.files[0]); // Obtener el archivo desde el input
@@ -48,7 +85,7 @@ function upload() {
 
       const { data, error } = await client
         .from('photos')
-        .insert([{ url: publicUrl, description }])
+        .insert([{ url: publicUrl, description, date: selectedDay }])
         .then((res) => {
           setImage(null);
           setDescription('');
@@ -67,7 +104,7 @@ function upload() {
         <span className="flex flex-row gap-4">
           <div className="relative flex items-center justify-center border-[2px] border-dashed rounded-md w-full border-zinc-800 bg-zinc-900">
             {imageUrl ? (
-              <span className="p-4 flex w-56">
+              <span className="p-4 flex w-44">
                 {/* <img src={imageUrl} alt="preview" className="object-cover" /> */}
                 <img
                   src={imageUrl}
@@ -110,8 +147,74 @@ function upload() {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="description"
           cols="30"
-          rows="6"
+          rows="3"
         />
+      </span>
+      <span className="w-full">
+        <div className="bg-[#18181B] rounded-lg p-8">
+          <div className="flex flex-col">
+            <h2 className="flex-auto font-semibold text-white lowercase">
+              {format(firstDayCurrentMonth, 'MMMM yyyy')}
+            </h2>
+            <time
+              className="text-white font-bold lowercase"
+              dateTime={format(selectedDay, 'yyyy-MM-dd')}
+            >
+              selected: {format(selectedDay, 'MMM dd, yyy')}
+            </time>
+          </div>
+          <div className="grid grid-cols-7 mt-2 text-xs leading-6 font-bold text-center text-[#C7264D]">
+            <div>s</div>
+            <div>m</div>
+            <div>t</div>
+            <div>w</div>
+            <div>t</div>
+            <div>f</div>
+            <div>s</div>
+          </div>
+          <div className="grid grid-cols-7 mt-2 text-sm">
+            {days.map((day, dayIdx) => (
+              <div
+                key={day.toString()}
+                className={classNames(
+                  dayIdx === 0 && colStartClasses[getDay(day)],
+                  ''
+                )}
+              >
+                <button
+                  type="button"
+                  onClick={() => setSelectedDay(day)}
+                  className={classNames(
+                    isEqual(day, selectedDay) && 'text-white',
+                    !isEqual(day, selectedDay) &&
+                      isToday(day) &&
+                      'text-[#C7264D]',
+                    !isEqual(day, selectedDay) &&
+                      !isToday(day) &&
+                      isSameMonth(day, firstDayCurrentMonth) &&
+                      'text-white',
+                    !isEqual(day, selectedDay) &&
+                      !isToday(day) &&
+                      !isSameMonth(day, firstDayCurrentMonth) &&
+                      'text-gray-400',
+                    isEqual(day, selectedDay) && isToday(day) && 'bg-[#C7264D]',
+                    isEqual(day, selectedDay) &&
+                      !isToday(day) &&
+                      'bg-[#C7264D]',
+                    !isEqual(day, selectedDay) && 'hover:bg-black',
+                    (isEqual(day, selectedDay) || isToday(day)) &&
+                      'font-semibold',
+                    'mx-auto flex h-8 w-8 items-center justify-center rounded-full'
+                  )}
+                >
+                  <time dateTime={format(day, 'yyyy-MM-dd')}>
+                    {format(day, 'd')}
+                  </time>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       </span>
       <span className="flex flex-row gap-4 justify-center">
         <button

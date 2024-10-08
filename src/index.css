@@ -28,7 +28,7 @@ code {
   background-attachment: fixed;
 } */
 
-img {
+/* img {
     max-width: 100%;
     height: auto;
     vertical-align: middle;
@@ -54,4 +54,4 @@ img {
 }
 .gallery .tall {
     grid-row: span 2;
-}
+} */

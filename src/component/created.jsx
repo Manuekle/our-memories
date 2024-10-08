@@ -2,11 +2,11 @@ import React from 'react';
 
 function created() {
   return (
-    <section className="fixed top-0 bottom-0  h-full w-full flex justify-center items-end py-9">
+    <section className="fixed top-0 bottom-0 h-full w-full flex justify-center items-end py-3">
       <a
         href="https://www.instagram.com/manudev.jsx"
         target="_blank"
-        className="border-2 px-6 py-2 rounded-full shadow-md bg-zinc-100/60 z-30"
+        className="border-2 px-6 py-2 rounded-full shadow-md bg-zinc-900/60 z-30"
         rel="noreferrer"
       >
         <p className="font-bold text-xs">
