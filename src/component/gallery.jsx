@@ -8,7 +8,7 @@ function gallery() {
       const { data, error } = await client
         .from('photos')
         .select('*')
-        .order('id', { ascending: false });
+        .order('date', { ascending: false });
       if (error) {
         console.log(error);
       } else {
