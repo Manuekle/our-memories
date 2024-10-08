@@ -16,7 +16,7 @@ function gallery() {
       }
     };
     fetchResults();
-  }, []);
+  }, [photos]);
   return (
     <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 gap-8 items-center">
       {photos.map((photo) => (
@@ -28,8 +28,10 @@ function gallery() {
               src={photo.url}
             />
           </div>
-          <span className="text-white text-xs">{photo.date}</span>
-          <span className="text-white text-xs">{photo.description}</span>
+          <div className="flex flex-col gap-2">
+            <span className="text-white text-xs">{photo.date}</span>
+            <span className="text-white text-xs">{photo.description}</span>
+          </div>
         </article>
       ))}
       <span className="text-white text-center">

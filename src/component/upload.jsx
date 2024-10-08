@@ -19,7 +19,6 @@ import { PutObjectCommand } from '@aws-sdk/client-s3'; // Importar el comando ne
 import { bucket } from '../supabase/bucket'; // Importamos el cliente S3 configurado
 import { client } from '../supabase/client';
 import Loader from './loader';
-import Example from './calendar';
 
 function upload() {
   const [image, setImage] = useState(null);
@@ -36,6 +35,7 @@ function upload() {
     'col-start-6',
     'col-start-7'
   ];
+
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
@@ -43,6 +43,17 @@ function upload() {
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
   }
+
+  function previousMonth() {
+    const firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 });
+    setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
+  }
+
+  function nextMonth() {
+    const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
+    setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
+  }
+
   const days = eachDayOfInterval({
     start: firstDayCurrentMonth,
     end: endOfMonth(firstDayCurrentMonth)
@@ -153,15 +164,33 @@ function upload() {
       <span className="w-full">
         <div className="bg-[#18181B] rounded-lg p-8">
           <div className="flex flex-col">
-            <h2 className="flex-auto font-semibold text-white lowercase">
-              {format(firstDayCurrentMonth, 'MMMM yyyy')}
-            </h2>
-            <time
+            <div className="flex flex-row gap-2 justify-between items-center">
+              <button
+                type="button"
+                onClick={previousMonth}
+                className="text-[#C7264D] font-bold"
+              >
+                <span className="sr-only">Previous month</span>
+                previous
+              </button>
+              <h2 className="font-semibold text-white lowercase">
+                {format(firstDayCurrentMonth, 'MMMM yyyy')}
+              </h2>
+              <button
+                onClick={nextMonth}
+                type="button"
+                className="text-[#C7264D] font-bold"
+              >
+                <span className="sr-only">Next month</span>
+                next
+              </button>
+            </div>
+            {/* <time
               className="text-white font-bold lowercase"
               dateTime={format(selectedDay, 'yyyy-MM-dd')}
             >
               selected: {format(selectedDay, 'MMM dd, yyy')}
-            </time>
+            </time> */}
           </div>
           <div className="grid grid-cols-7 mt-2 text-xs leading-6 font-bold text-center text-[#C7264D]">
             <div>s</div>

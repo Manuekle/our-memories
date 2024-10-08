@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid';
 import {
   add,
   eachDayOfInterval,
@@ -44,6 +45,22 @@ function calendar() {
           <h2 className="flex-auto font-semibold text-white lowercase">
             {format(firstDayCurrentMonth, 'MMMM yyyy')}
           </h2>
+          <button
+            type="button"
+            onClick={previousMonth}
+            className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
+          >
+            <span className="sr-only">Previous month</span>
+            {'<'}
+          </button>
+          <button
+            onClick={nextMonth}
+            type="button"
+            className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
+          >
+            <span className="sr-only">Next month</span>
+            {'>'}
+          </button>
           <time
             className="text-white font-bold lowercase"
             dateTime={format(selectedDay, 'yyyy-MM-dd')}
